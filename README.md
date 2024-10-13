@@ -48,3 +48,7 @@ To use this app, you'll need to set up a Google Cloud project and enable the Goo
 7. Note down the Client ID and API Key.
 
 Replace `YOUR_GOOGLE_CLIENT_ID` and `YOUR_GOOGLE_API_KEY` in the `App.tsx` file with the actual values from your Google Cloud project.
+
+## Weather
+
+provided by https://home.openweathermap.org/

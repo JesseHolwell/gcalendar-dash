@@ -2,6 +2,7 @@
 
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 
 const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
@@ -57,7 +58,7 @@ export default function Weather() {
           <p className="text-lg">
             {Math.round(weather.main.temp)}°C - {weather.weather[0].description}
           </p>
-          <img
+          <Image
             src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
             alt="Weather Icon"
           />
