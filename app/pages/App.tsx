@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Login from "./Login";
 import Tasks from "./Tasks";
 import Weather from "./Weather";
+import Affirmation from "./Affirmation";
 
 const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
 
@@ -76,6 +77,10 @@ export default function App() {
       <div>
         <h1 className="text-2xl font-bold mb-4">Weather</h1>
         <Weather />
+      </div>
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Weather</h1>
+        <Affirmation />
       </div>
       <div>
         <h1 className="text-2xl font-bold mb-4">Google Calendar & Tasks</h1>
