@@ -85,7 +85,7 @@ export default function Home() {
         </a> */}
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://calendar.google.com/calendar/u/0/r"
+          href="https://calendar.google.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -100,7 +100,7 @@ export default function Home() {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://calendar.google.com/calendar/u/0/r/tasks"
+          href="https://tasks.google.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
