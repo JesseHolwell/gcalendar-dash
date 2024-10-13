@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Development
+
+To use this app, you'll need to set up a Google Cloud project and enable the Google Calendar API. Here are the steps to do that:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project or select an existing one.
+3. Enable the Google Calendar API for your project.
+4. Create credentials (OAuth client ID) for a Web application.
+5. Add `http://localhost:3000` to the list of authorized JavaScript origins.
+6. Add `http://localhost:3000/oauth2callback` to the list of authorized redirect URIs.
+7. Note down the Client ID and API Key.
+
+Replace `YOUR_GOOGLE_CLIENT_ID` and `YOUR_GOOGLE_API_KEY` in the `App.tsx` file with the actual values from your Google Cloud project.
