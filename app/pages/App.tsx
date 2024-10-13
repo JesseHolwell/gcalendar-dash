@@ -79,7 +79,7 @@ export default function App() {
         <Weather />
       </div>
       <div>
-        <h1 className="text-2xl font-bold mb-4">Weather</h1>
+        <h1 className="text-2xl font-bold mb-4">Affirmation</h1>
         <Affirmation />
       </div>
       <div>

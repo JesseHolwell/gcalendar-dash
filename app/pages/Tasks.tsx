@@ -63,11 +63,11 @@ export default function Tasks({ gapi }: TasksProps) {
                 </span>
               )}
             </span>
-            {/* {task.status !== "completed" && (
+            {task.status !== "completed" && (
               <Button onClick={() => handleCompleteTask(task.id)}>
                 Mark as Complete
               </Button>
-            )} */}
+            )}
           </li>
         ))}
       </ul>
