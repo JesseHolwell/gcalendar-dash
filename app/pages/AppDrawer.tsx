@@ -101,12 +101,13 @@ export default function AppDrawer({ onSignOut, isSignedIn }: DrawerProps) {
                     // onClick={handleSignoutClick}
                     onClick={onSignOut}
                     variant="destructive"
+                    className="mt-4"
                   >
                     Sign Out
                   </Button>
                 )}
                 <DrawerClose asChild>
-                  <Button className="mt-4">Close</Button>
+                  <Button className="mt-2">Close</Button>
                 </DrawerClose>
               </DrawerFooter>
             </div>

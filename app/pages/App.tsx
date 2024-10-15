@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Affirmation from "./Affirmation";
 import AppDrawer from "./AppDrawer";
 import Clock from "./Clock";
@@ -15,7 +15,7 @@ export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [gapi, setGapi] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleLoginSuccess = (accessToken: string, gapiInstance: any) => {
     setIsSignedIn(true);
@@ -23,11 +23,17 @@ export default function App() {
     setGapi(gapiInstance);
   };
 
-  const handleLogout = () => {
-    setIsSignedIn(false);
-    setToken(null);
-    setGapi(null);
-  };
+  const handleLogout = useCallback(() => {
+    //TODO: put this in Login.tsx
+    if (token) {
+      (window as any).google.accounts.oauth2.revoke(token, () => {
+        setIsSignedIn(false);
+        setToken(null);
+        setGapi(null);
+        localStorage.removeItem("access_token");
+      });
+    }
+  }, [token]);
 
   // const toggleDrawer = () => {
   //   setIsDrawerOpen(!isDrawerOpen);
@@ -37,7 +43,7 @@ export default function App() {
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center">
       <div className="min-h-screen bg-black/50 p-12 text-white">
         <div className="mx-auto space-y-8">
-          <div className="flex justify-between items-center w-full">
+          <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8">
             <Affirmation />
             <Clock />
             <Weather />

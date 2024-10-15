@@ -91,9 +91,9 @@ export default function Tasks({ gapi }: TasksProps) {
       })
       .then(() => {
         console.log(`Task ${taskId} marked as completed.`);
-        listTasks(); // Refresh task list after completion
 
-        //TODO: dont need to refresh task list, just remove the entry
+        // Remove the completed task from the local state
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
       })
       .catch((error: any) => {
         console.error("Error updating task:", error);

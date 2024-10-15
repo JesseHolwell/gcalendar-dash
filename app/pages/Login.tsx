@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -91,14 +92,20 @@ export default function Login({ onLoginSuccess, onLogout }: LoginProps) {
 
   return (
     <Card className="bg-white/10 border-none text-white">
-      <CardHeader>
-        <button
-          onClick={handleAuthClick}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
+      <CardHeader></CardHeader>
+      <CardContent>
+        <p className="mb-4">
+          Sign in with your Google account to access personalized features:
+        </p>
+        <ul className="list-disc pl-5 mb-4">
+          <li>Manage your tasks</li>
+          <li>View and edit your calendar</li>
+          <li>Sync your data across devices</li>
+        </ul>
+        <Button onClick={handleAuthClick} variant="default">
           Sign In with Google
-        </button>
-      </CardHeader>
+        </Button>
+      </CardContent>
     </Card>
   );
 }
