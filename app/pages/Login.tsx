@@ -92,21 +92,12 @@ export default function Login({ onLoginSuccess, onLogout }: LoginProps) {
   return (
     <Card className="bg-white/10 border-none text-white">
       <CardHeader>
-        {!isSignedIn ? (
-          <button
-            onClick={handleSignoutClick}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Sign Out
-          </button>
-        ) : (
-          <button
-            onClick={handleAuthClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Sign In with Google
-          </button>
-        )}
+        <button
+          onClick={handleAuthClick}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Sign In with Google
+        </button>
       </CardHeader>
     </Card>
   );
