@@ -53,14 +53,14 @@ export default function Calendar({ gapi }: CalendarProps) {
       <CardContent>
         <Table>
           <TableBody>
-            <TableRow>
-              {events.map((event) => (
-                <TableCell key={event.id}>
+            {events.map((event) => (
+              <TableRow key={event.id}>
+                <TableCell>
                   {event.summary} -{" "}
                   {new Date(event.start.dateTime).toLocaleString()}
                 </TableCell>
-              ))}
-            </TableRow>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>
