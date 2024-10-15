@@ -9,8 +9,9 @@ import { TableBody, TableRow, TableCell, Table } from "@/components/ui/table";
 interface Task {
   id: string;
   title: string;
+  category: string;
+  categoryId: string;
   status: string;
-  due?: string;
 }
 
 interface TasksProps {
@@ -26,32 +27,76 @@ export default function Tasks({ gapi }: TasksProps) {
     }
   }, [gapi]);
 
-  const listTasks = () => {
-    if (!gapi?.client?.tasks?.tasks) {
-      console.error("couldnt get tasks?");
+  const listTasks = async () => {
+    if (!gapi?.client?.tasks?.tasklists) {
+      console.error("GAPI client not initialized or missing.");
+      return;
+    }
+
+    try {
+      // Step 1: Fetch all task lists
+      const taskListsResponse = await gapi.client.tasks.tasklists.list();
+      const taskLists = taskListsResponse.result.items || [];
+
+      console.log("Task lists:", taskLists);
+
+      let allTasks: Task[] = [];
+
+      // Step 2: Iterate through each task list and fetch its tasks
+      for (const taskList of taskLists) {
+        const taskListId = taskList.id;
+        const taskListName = taskList.title; // Capture the name of the task list
+
+        const tasksResponse = await gapi.client.tasks.tasks.list({
+          tasklist: taskListId,
+          maxResults: 100, // Adjust as needed
+          showCompleted: false,
+        });
+
+        const tasks = tasksResponse.result.items || [];
+
+        // Add the taskListName to each task object
+        const tasksWithListName = tasks.map((task: any) => ({
+          ...task,
+          category: taskListName, // Add the name of the task list
+          categoryId: taskListId,
+        }));
+
+        // Merge the tasks into the allTasks array
+        allTasks = [...allTasks, ...tasksWithListName];
+      }
+
+      console.log("All tasks:", allTasks);
+      setTasks(allTasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  const handleCompleteTask = (taskId: string, taskListId: string) => {
+    console.log("Completing task:", { taskId, taskListId });
+
+    if (!taskId || !taskListId) {
+      console.error("Missing taskId or taskListId.");
       return;
     }
 
     gapi.client.tasks.tasks
-      .list({ tasklist: "@default", maxResults: 10 })
-      .then((response: any) => {
-        setTasks(response.result.items || []);
-        console.log("tasks >", tasks);
-      })
-      .catch((error: any) => {
-        console.error("Error fetching tasks:", error);
-      });
-  };
-
-  const handleCompleteTask = (taskId: string) => {
-    gapi.client.tasks.tasks
-      .update({
-        tasklist: "@default",
-        task: taskId,
-        resource: { status: "completed" },
+      .patch({
+        tasklist: taskListId, // The ID of the task list
+        task: taskId, // The ID of the task to update
+        resource: {
+          status: "completed",
+        }, // Update the task status
       })
       .then(() => {
-        listTasks(); // Refresh task list
+        console.log(`Task ${taskId} marked as completed.`);
+        listTasks(); // Refresh task list after completion
+
+        //TODO: dont need to refresh task list, just remove the entry
+      })
+      .catch((error: any) => {
+        console.error("Error updating task:", error);
       });
   };
 
@@ -66,8 +111,11 @@ export default function Tasks({ gapi }: TasksProps) {
             {tasks.map((task) => (
               <TableRow key={task.id}>
                 <TableCell>{task.title}</TableCell>
+                <TableCell>{task.category}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleCompleteTask(task.id)}>
+                  <Button
+                    onClick={() => handleCompleteTask(task.id, task.categoryId)}
+                  >
                     Done
                   </Button>
                 </TableCell>
