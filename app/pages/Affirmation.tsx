@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 
 const affirmations = [
@@ -29,10 +30,11 @@ const Affirmation: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-blue-100 p-4 rounded shadow-md">
-      <h2 className="text-xl font-bold mb-2">Daily Affirmation</h2>
-      <p className="text-lg">{affirmation}</p>
-    </div>
+    <Card className="bg-white/10 border-none text-white">
+      <CardHeader>
+        <span>{affirmation}</span>
+      </CardHeader>
+    </Card>
   );
 };
 

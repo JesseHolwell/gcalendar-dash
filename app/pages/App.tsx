@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import Affirmation from "./Affirmation";
+import Clock from "./Clock";
 import Login from "./Login";
 import Tasks from "./Tasks";
 import Weather from "./Weather";
-import Affirmation from "./Affirmation";
 
 const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
 
@@ -49,7 +50,15 @@ export default function App() {
       });
     };
 
+    // Load GAPI and GIS scripts
     loadGapiAndGIS();
+
+    // Check if a token exists in localStorage
+    const storedToken = localStorage.getItem("access_token");
+    if (storedToken) {
+      setToken(storedToken);
+      setIsSignedIn(true);
+    }
   }, []);
 
   const handleAuthClick = () => {
@@ -57,8 +66,12 @@ export default function App() {
       client_id: CLIENT_ID,
       scope: SCOPES,
       callback: (response: any) => {
-        setToken(response.access_token);
+        const { access_token } = response;
+        setToken(access_token);
         setIsSignedIn(true);
+
+        // Save the token in localStorage for persistence
+        localStorage.setItem("access_token", access_token);
       },
     });
 
@@ -69,35 +82,30 @@ export default function App() {
     (window as any).google.accounts.oauth2.revoke(token, () => {
       setIsSignedIn(false);
       setToken(null);
+
+      // Remove token from localStorage on sign-out
+      localStorage.removeItem("access_token");
     });
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Weather</h1>
-        <Weather />
-      </div>
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Affirmation</h1>
-        <Affirmation />
-      </div>
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Google Calendar & Tasks</h1>
-        {isSignedIn ? (
-          <>
-            <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleSignoutClick}
-            >
-              Sign Out
-            </button>
-            <Calendar gapi={gapi} />
-            <Tasks gapi={gapi} />
-          </>
-        ) : (
-          <Login onLogin={handleAuthClick} />
-        )}
+    <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center">
+      <div className="min-h-screen bg-black/50 p-12 text-white">
+        <div className="mx-auto space-y-8">
+          <div className="flex justify-between items-center w-full">
+            <Affirmation />
+            <Clock />
+            <Weather />
+          </div>
+          {isSignedIn ? (
+            <div className="grid md:grid-cols-2 gap-8">
+              <Tasks gapi={gapi} />
+              <Calendar gapi={gapi} />
+            </div>
+          ) : (
+            <Login onLogin={handleAuthClick} />
+          )}
+        </div>
       </div>
     </div>
   );

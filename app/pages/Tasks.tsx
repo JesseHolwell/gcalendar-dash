@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TableBody, TableRow, TableCell, Table } from "@/components/ui/table";
+// import { Table } from "lucide-react";
 
 interface Task {
   id: string;
@@ -24,10 +27,16 @@ export default function Tasks({ gapi }: TasksProps) {
   }, [gapi]);
 
   const listTasks = () => {
+    if (!gapi?.client?.tasks?.tasks) {
+      console.error("couldnt get tasks?");
+      return;
+    }
+
     gapi.client.tasks.tasks
       .list({ tasklist: "@default", maxResults: 10 })
       .then((response: any) => {
         setTasks(response.result.items || []);
+        console.log("tasks >", tasks);
       })
       .catch((error: any) => {
         console.error("Error fetching tasks:", error);
@@ -47,30 +56,26 @@ export default function Tasks({ gapi }: TasksProps) {
   };
 
   return (
-    <div className="mt-4 space-y-4">
-      <h2 className="text-2xl font-bold">Your Tasks</h2>
-      <ul className="space-y-2">
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            className="flex justify-between items-center bg-secondary p-2 rounded"
-          >
-            <span>
-              {task.title}
-              {task.due && (
-                <span className="ml-2 text-sm text-gray-600">
-                  (Due: {new Date(task.due).toLocaleString()})
-                </span>
-              )}
-            </span>
-            {task.status !== "completed" && (
-              <Button onClick={() => handleCompleteTask(task.id)}>
-                Mark as Complete
-              </Button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Card className="bg-white/10 border-none text-white">
+      <CardHeader>
+        <CardTitle>Tasks</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableBody>
+            {tasks.map((task) => (
+              <TableRow key={task.id}>
+                <TableCell>{task.title}</TableCell>
+                <TableCell>
+                  <Button onClick={() => handleCompleteTask(task.id)}>
+                    Done
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
