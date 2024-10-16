@@ -113,13 +113,13 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableHeader>
+          {/* <TableHeader>
             <TableRow className="text-lg">
               <TableCell>Date</TableCell>
               <TableCell>Time</TableCell>
               <TableCell>Event</TableCell>
             </TableRow>
-          </TableHeader>
+          </TableHeader> */}
           <TableBody>
             {Object.entries(groupedEvents).map(([date, dateEvents]) =>
               dateEvents.map((event, index) => (

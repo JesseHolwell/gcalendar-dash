@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Image from "next/image";
+import { REFRESH_TIME } from "../util/config";
 
 interface DrawerProps {
   onSignOut: () => void;
@@ -49,6 +50,11 @@ export default function AppDrawer({ onSignOut, isSignedIn }: DrawerProps) {
                 <li>Task management (requires sign-in)</li>
                 <li>Calendar integration (requires sign-in)</li>
               </ul>
+              <p>
+                App will refresh automatically every {REFRESH_TIME / 1000 / 60}{" "}
+                minutes
+              </p>
+              <br />
               <p>
                 Sign in with your Google account to access the full features of
                 the app, including task management and calendar integration.

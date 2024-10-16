@@ -16,9 +16,9 @@ export default function Refresh() {
   return (
     <Button
       variant="ghost"
-      size="icon"
+      // size="icon"
       //   onClick={toggleDrawer}
-      className="text-white"
+      // className="text-white"
     >
       <RefreshCw className="h-6 w-6" />
     </Button>

@@ -10,6 +10,7 @@ import Tasks from "./Tasks";
 import Weather from "./Weather";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
+import { REFRESH_TIME } from "../util/config";
 
 const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
 
@@ -47,7 +48,7 @@ export default function App() {
       // Update the data every hour
       interval = setInterval(() => {
         refreshData();
-      }, 3600000);
+      }, REFRESH_TIME);
     }
 
     // Clean up the interval on component unmount or when user signs out
@@ -59,22 +60,24 @@ export default function App() {
   }, [isSignedIn]);
 
   return (
-    <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center">
+    <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center bg-fixed">
       <div className="min-h-screen bg-black/50 p-12 text-white">
         <div className="mx-auto space-y-8">
           <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8">
             <Affirmation />
             <Clock />
             <Weather refreshTrigger={refreshTrigger} />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={refreshData}
-              className="text-white"
-            >
-              <RefreshCw className="h-6 w-6" />
-            </Button>
-            <AppDrawer onSignOut={handleLogout} isSignedIn={isSignedIn} />
+            <div className="flex w-full md:w-auto justify-end -order-1 md:order-1">
+              <Button
+                variant="ghost"
+                onClick={refreshData}
+                className="mr-4"
+                size="icon"
+              >
+                <RefreshCw className="h-6 w-6" />
+              </Button>
+              <AppDrawer onSignOut={handleLogout} isSignedIn={isSignedIn} />
+            </div>
           </div>
           {isSignedIn ? (
             <div className="grid md:grid-cols-2 gap-8">

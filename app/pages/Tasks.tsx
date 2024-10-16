@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TableBody, TableRow, TableCell, Table } from "@/components/ui/table";
+import { CheckCircle } from "lucide-react";
 // import { Table } from "lucide-react";
 
 interface Task {
@@ -116,8 +117,10 @@ export default function Tasks({ gapi, refreshTrigger }: TasksProps) {
                 <TableCell>
                   <Button
                     onClick={() => handleCompleteTask(task.id, task.categoryId)}
+                    variant="default"
+                    size="icon"
                   >
-                    Done
+                    <CheckCircle className="h-6 w-6" />
                   </Button>
                 </TableCell>
               </TableRow>
