@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import Affirmation from "./Affirmation";
 import AppDrawer from "./AppDrawer";
 import Clock from "./Clock";
@@ -26,7 +26,6 @@ export default function App() {
   };
 
   const handleLogout = useCallback(() => {
-    //TODO: put this in Login.tsx
     if (token) {
       (window as any).google.accounts.oauth2.revoke(token, () => {
         setIsSignedIn(false);
@@ -41,10 +40,23 @@ export default function App() {
     setRefreshTrigger((prev) => prev + 1);
   };
 
-  // Update the data every hour
-  const interval = setInterval(() => {
-    refreshData();
-  }, 3600000);
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isSignedIn) {
+      // Update the data every hour
+      interval = setInterval(() => {
+        refreshData();
+      }, 3600000);
+    }
+
+    // Clean up the interval on component unmount or when user signs out
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isSignedIn]);
 
   return (
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center">
