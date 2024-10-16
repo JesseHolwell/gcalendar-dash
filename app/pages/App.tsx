@@ -61,7 +61,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center bg-fixed">
-      <div className="min-h-screen bg-black/50 p-12 text-white">
+      <div className="min-h-screen bg-black/75 p-12 text-white">
         <div className="mx-auto space-y-8">
           <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8">
             <Affirmation />

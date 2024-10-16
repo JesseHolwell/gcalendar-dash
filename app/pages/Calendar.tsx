@@ -2,18 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 
 interface Event {
   id: string;
   summary: string;
+  description?: string;
+  location?: string;
   start: { date?: string; dateTime?: string };
   end: { date?: string; dateTime?: string };
 }
@@ -26,6 +29,8 @@ interface CalendarProps {
 export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
   const [events, setEvents] = useState<Event[]>([]);
   const [isWeeklyView, setIsWeeklyView] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (gapi) {
@@ -65,6 +70,7 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
         orderBy: "startTime",
       })
       .then((response: any) => {
+        console.log("Retrieved events:", response.result.items);
         setEvents(response.result.items);
       });
   };
@@ -101,6 +107,11 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
     return `${startTime} - ${endTime}`;
   };
 
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+    setIsDialogOpen(true);
+  };
+
   const groupedEvents = groupEventsByDate(events);
 
   return (
@@ -113,18 +124,14 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
       </CardHeader>
       <CardContent>
         <Table>
-          {/* <TableHeader>
-            <TableRow className="text-lg">
-              <TableCell>Date</TableCell>
-              <TableCell>Time</TableCell>
-              <TableCell>Event</TableCell>
-            </TableRow>
-          </TableHeader> */}
           <TableBody>
             {Object.entries(groupedEvents).map(([date, dateEvents]) =>
               dateEvents.map((event, index) => (
-                <TableRow key={event.id}>
-                  {/* {index === 0 && ( */}
+                <TableRow
+                  key={event.id}
+                  className="cursor-pointer hover:bg-white/5"
+                  onClick={() => handleEventClick(event)}
+                >
                   <TableCell>
                     {new Date(date).toLocaleDateString([], {
                       weekday: "short",
@@ -132,7 +139,6 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
                       day: "numeric",
                     })}
                   </TableCell>
-                  {/* )} */}
                   <TableCell>{formatTime(event)}</TableCell>
                   <TableCell>{event.summary}</TableCell>
                 </TableRow>
@@ -141,6 +147,46 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
           </TableBody>
         </Table>
       </CardContent>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedEvent?.summary}</DialogTitle>
+            <DialogDescription>Event Details</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="font-medium text-right">Date:</span>
+              <span className="col-span-3">
+                {selectedEvent?.start.date
+                  ? new Date(selectedEvent.start.date).toLocaleDateString()
+                  : new Date(
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                      selectedEvent?.start.dateTime!
+                    ).toLocaleDateString()}
+              </span>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="font-medium text-right">Time:</span>
+              <span className="col-span-3">
+                {selectedEvent && formatTime(selectedEvent)}
+              </span>
+            </div>
+            {selectedEvent?.location && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-medium text-right">Location:</span>
+                <span className="col-span-3">{selectedEvent.location}</span>
+              </div>
+            )}
+            {selectedEvent?.description && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-medium text-right">Description:</span>
+                <span className="col-span-3">{selectedEvent.description}</span>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
