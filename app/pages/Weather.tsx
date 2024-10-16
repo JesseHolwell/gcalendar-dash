@@ -11,10 +11,13 @@ interface WeatherData {
   name: string;
 }
 
-export default function Weather() {
+interface WeatherProps {
+  refreshTrigger: number;
+}
+
+export default function Weather({ refreshTrigger }: WeatherProps) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [time, setTime] = useState<string>("");
 
   useEffect(() => {
     // Fetch weather based on user location
@@ -28,7 +31,7 @@ export default function Weather() {
         setError("Unable to fetch your location.");
       }
     );
-  }, []);
+  }, [refreshTrigger]);
 
   const fetchWeather = async (lat: number, lon: number) => {
     try {

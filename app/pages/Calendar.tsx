@@ -20,9 +20,10 @@ interface Event {
 
 interface CalendarProps {
   gapi: any;
+  refreshTrigger: number;
 }
 
-export default function Calendar({ gapi }: CalendarProps) {
+export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
   const [events, setEvents] = useState<Event[]>([]);
   const [isWeeklyView, setIsWeeklyView] = useState(false);
 
@@ -30,9 +31,11 @@ export default function Calendar({ gapi }: CalendarProps) {
     if (gapi) {
       listUpcomingEvents();
     }
-  }, [gapi, isWeeklyView]);
+  }, [gapi, isWeeklyView, refreshTrigger]);
 
   const listUpcomingEvents = () => {
+    console.log("Getting events");
+
     if (!gapi?.client?.calendar?.events) {
       console.error("Couldn't get calendar events");
       return;

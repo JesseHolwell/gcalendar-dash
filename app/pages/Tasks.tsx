@@ -16,16 +16,17 @@ interface Task {
 
 interface TasksProps {
   gapi: any;
+  refreshTrigger: number;
 }
 
-export default function Tasks({ gapi }: TasksProps) {
+export default function Tasks({ gapi, refreshTrigger }: TasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     if (gapi) {
       listTasks();
     }
-  }, [gapi]);
+  }, [gapi, refreshTrigger]);
 
   const listTasks = async () => {
     if (!gapi?.client?.tasks?.tasklists) {
