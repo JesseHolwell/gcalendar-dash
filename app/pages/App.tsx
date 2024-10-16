@@ -63,11 +63,11 @@ export default function App() {
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center bg-fixed">
       <div className="min-h-screen bg-black/75 p-12 text-white">
         <div className="mx-auto space-y-8">
-          <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8">
+          <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8 items-stretch">
             <Affirmation />
             <Clock />
             <Weather refreshTrigger={refreshTrigger} />
-            <div className="flex w-full md:w-auto justify-end -order-1 md:order-1">
+            <div className="flex w-full md:w-auto justify-end -order-1 md:order-1 items-center">
               <Button
                 variant="ghost"
                 onClick={refreshData}
