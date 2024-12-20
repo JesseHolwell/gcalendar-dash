@@ -3,8 +3,10 @@ import { Session } from "next-auth";
 export interface Task {
   id: string;
   title: string;
-  notes?: string;
+  category: string;
+  categoryId: string;
   status: "needsAction" | "completed";
+  notes?: string;
   due?: string;
 }
 
@@ -31,6 +33,8 @@ export async function fetchTasks(session: Session | null): Promise<Task[]> {
     notes: item.notes,
     status: item.status,
     due: item.due,
+    category: item.category,
+    categoryId: item.categoryId,
   }));
 }
 
