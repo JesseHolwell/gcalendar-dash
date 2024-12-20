@@ -10,7 +10,7 @@ import Tasks from "./Tasks";
 import Weather from "./Weather";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
-import { REFRESH_TIME } from "../util/config";
+import { REFRESH_TIME } from "../utils/config";
 
 const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
 
@@ -81,14 +81,15 @@ export default function App() {
           </div>
           {isSignedIn ? (
             <div className="grid md:grid-cols-2 gap-8">
-              <Tasks gapi={gapi} refreshTrigger={refreshTrigger} />
+              <Tasks />
               <Calendar gapi={gapi} refreshTrigger={refreshTrigger} />
             </div>
           ) : (
-            <Login
-              onLoginSuccess={handleLoginSuccess}
-              onLogout={handleLogout}
-            />
+            <div>
+              <Tasks />
+
+              <Login />
+            </div>
           )}
         </div>
       </div>

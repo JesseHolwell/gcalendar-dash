@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Image from "next/image";
-import { REFRESH_TIME } from "../util/config";
+import { REFRESH_TIME } from "../utils/config";
 
 interface DrawerProps {
   onSignOut: () => void;
