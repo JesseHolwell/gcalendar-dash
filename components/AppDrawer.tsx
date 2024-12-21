@@ -12,13 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import { REFRESH_TIME } from "../utils/config";
+import Login from "./Login";
 
-interface DrawerProps {
-  onSignOut: () => void;
-  isSignedIn: boolean;
-}
-
-export default function AppDrawer({ onSignOut, isSignedIn }: DrawerProps) {
+export default function AppDrawer() {
   return (
     <Drawer direction="bottom">
       <DrawerTrigger asChild>
@@ -102,7 +98,7 @@ export default function AppDrawer({ onSignOut, isSignedIn }: DrawerProps) {
                   />
                   Go to Tasks →
                 </a>
-                {isSignedIn && (
+                {/* {isSignedIn && (
                   <Button
                     // onClick={handleSignoutClick}
                     onClick={onSignOut}
@@ -111,7 +107,10 @@ export default function AppDrawer({ onSignOut, isSignedIn }: DrawerProps) {
                   >
                     Sign Out
                   </Button>
-                )}
+                )} */}
+
+                <Login />
+
                 <DrawerClose asChild>
                   <Button className="mt-2">Close</Button>
                 </DrawerClose>

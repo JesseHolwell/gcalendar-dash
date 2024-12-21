@@ -21,108 +21,103 @@ interface Event {
   end: { date?: string; dateTime?: string };
 }
 
-interface CalendarProps {
-  gapi: any;
-  refreshTrigger: number;
-}
-
-export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
+export default function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isWeeklyView, setIsWeeklyView] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (gapi) {
-      listUpcomingEvents();
-    }
-  }, [gapi, isWeeklyView, refreshTrigger]);
+  // useEffect(() => {
+  //   if (gapi) {
+  //     listUpcomingEvents();
+  //   }
+  // }, [isWeeklyView]);
 
-  const listUpcomingEvents = () => {
-    console.log("Getting events");
+  // const listUpcomingEvents = () => {
+  //   console.log("Getting events");
 
-    if (!gapi?.client?.calendar?.events) {
-      console.error("Couldn't get calendar events");
-      return;
-    }
+  //   if (!gapi?.client?.calendar?.events) {
+  //     console.error("Couldn't get calendar events");
+  //     return;
+  //   }
 
-    const now = new Date();
-    const timeMin = now.toISOString();
-    const timeMax = isWeeklyView
-      ? new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 7
-        ).toISOString()
-      : new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1
-        ).toISOString();
+  //   const now = new Date();
+  //   const timeMin = now.toISOString();
+  //   const timeMax = isWeeklyView
+  //     ? new Date(
+  //         now.getFullYear(),
+  //         now.getMonth(),
+  //         now.getDate() + 7
+  //       ).toISOString()
+  //     : new Date(
+  //         now.getFullYear(),
+  //         now.getMonth(),
+  //         now.getDate() + 1
+  //       ).toISOString();
 
-    gapi.client.calendar.events
-      .list({
-        calendarId: "primary",
-        timeMin: timeMin,
-        timeMax: timeMax,
-        showDeleted: false,
-        singleEvents: true,
-        orderBy: "startTime",
-      })
-      .then((response: any) => {
-        console.log("Retrieved events:", response.result.items);
-        setEvents(response.result.items);
-      });
-  };
+  //   gapi.client.calendar.events
+  //     .list({
+  //       calendarId: "primary",
+  //       timeMin: timeMin,
+  //       timeMax: timeMax,
+  //       showDeleted: false,
+  //       singleEvents: true,
+  //       orderBy: "startTime",
+  //     })
+  //     .then((response: any) => {
+  //       console.log("Retrieved events:", response.result.items);
+  //       setEvents(response.result.items);
+  //     });
+  // };
 
-  const toggleView = () => {
-    setIsWeeklyView(!isWeeklyView);
-  };
+  // const toggleView = () => {
+  //   setIsWeeklyView(!isWeeklyView);
+  // };
 
-  const groupEventsByDate = (events: Event[]) => {
-    const grouped: { [key: string]: Event[] } = {};
-    events.forEach((event) => {
-      const date =
-        event.start.date || new Date(event.start.dateTime!).toDateString();
-      if (!grouped[date]) {
-        grouped[date] = [];
-      }
-      grouped[date].push(event);
-    });
-    return grouped;
-  };
+  // const groupEventsByDate = (events: Event[]) => {
+  //   const grouped: { [key: string]: Event[] } = {};
+  //   events.forEach((event) => {
+  //     const date =
+  //       event.start.date || new Date(event.start.dateTime!).toDateString();
+  //     if (!grouped[date]) {
+  //       grouped[date] = [];
+  //     }
+  //     grouped[date].push(event);
+  //   });
+  //   return grouped;
+  // };
 
-  const formatTime = (event: Event) => {
-    if (event.start.date) {
-      return "All day";
-    }
-    const startTime = new Date(event.start.dateTime!).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const endTime = new Date(event.end.dateTime!).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    return `${startTime} - ${endTime}`;
-  };
+  // const formatTime = (event: Event) => {
+  //   if (event.start.date) {
+  //     return "All day";
+  //   }
+  //   const startTime = new Date(event.start.dateTime!).toLocaleTimeString([], {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  //   const endTime = new Date(event.end.dateTime!).toLocaleTimeString([], {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  //   return `${startTime} - ${endTime}`;
+  // };
 
-  const handleEventClick = (event: Event) => {
-    setSelectedEvent(event);
-    setIsDialogOpen(true);
-  };
+  // const handleEventClick = (event: Event) => {
+  //   setSelectedEvent(event);
+  //   setIsDialogOpen(true);
+  // };
 
-  const groupedEvents = groupEventsByDate(events);
+  // const groupedEvents = groupEventsByDate(events);
 
   return (
     <Card className="bg-white/10 border-none text-white">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{isWeeklyView ? "Weekly" : "Today's"} Events</CardTitle>
-        <Button onClick={toggleView} variant="default">
+        {/* <Button onClick={toggleView} variant="default">
           {isWeeklyView ? "Show Today" : "Show Week"}
-        </Button>
+        </Button> */}
       </CardHeader>
-      <CardContent>
+      {/* <CardContent>
         <Table>
           <TableBody>
             {Object.entries(groupedEvents).map(([date, dateEvents]) =>
@@ -146,10 +141,10 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
             )}
           </TableBody>
         </Table>
-      </CardContent>
+      </CardContent> */}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        {/* <DialogContent>
           <DialogHeader>
             <DialogTitle>{selectedEvent?.summary}</DialogTitle>
             <DialogDescription>Event Details</DialogDescription>
@@ -185,7 +180,7 @@ export default function Calendar({ gapi, refreshTrigger }: CalendarProps) {
               </div>
             )}
           </div>
-        </DialogContent>
+        </DialogContent> */}
       </Dialog>
     </Card>
   );

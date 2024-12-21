@@ -20,32 +20,34 @@ export default function Login() {
   }
 
   return (
-    <Card className="bg-white/10 border-none text-white">
-      <CardHeader></CardHeader>
-      <CardContent>
-        {session ? (
-          <div>
-            <p className="mb-4">Signed in as {session.user?.email}</p>
-            <Button onClick={handleSignOut} variant="default">
-              Sign Out
-            </Button>
-          </div>
-        ) : (
-          <>
-            <p className="mb-4">
-              Sign in with your Google account to access personalized features:
-            </p>
-            <ul className="list-disc pl-5 mb-4">
-              <li>Manage your tasks</li>
-              <li>View and edit your calendar</li>
-              <li>Sync your data across devices</li>
-            </ul>
-            <Button onClick={handleSignIn} variant="default">
-              Sign In with Google
-            </Button>
-          </>
-        )}
-      </CardContent>
-    </Card>
+    // <Card className="bg-white/10 border-none text-white">
+    //   <CardHeader></CardHeader>
+    //   <CardContent>
+    <>
+      {session ? (
+        <div>
+          <p className="mb-4">Signed in as {session.user?.email}</p>
+          <Button onClick={handleSignOut} variant="default">
+            Sign Out
+          </Button>
+        </div>
+      ) : (
+        <>
+          <p className="mb-4">
+            Sign in with your Google account to access personalized features:
+          </p>
+          <ul className="list-disc pl-5 mb-4">
+            <li>Manage your tasks</li>
+            <li>View and edit your calendar</li>
+            <li>Sync your data across devices</li>
+          </ul>
+          <Button onClick={handleSignIn} variant="default">
+            Sign In with Google
+          </Button>
+        </>
+      )}
+    </>
+    //   </CardContent>
+    // </Card>
   );
 }
