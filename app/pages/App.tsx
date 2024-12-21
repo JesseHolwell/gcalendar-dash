@@ -2,17 +2,19 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useState, useEffect } from "react";
-import Affirmation from "./Affirmation";
-import AppDrawer from "./AppDrawer";
-import Clock from "./Clock";
-import Login from "./Login";
-import Tasks from "./Tasks";
-import Weather from "./Weather";
+import Affirmation from "../../components/Affirmation";
+import AppDrawer from "../../components/AppDrawer";
+import Clock from "../../components/Clock";
+import Login from "../../components/Login";
+import Tasks from "../../components/Tasks";
+import Weather from "../../components/Weather";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
-import { REFRESH_TIME } from "../utils/config";
+import { REFRESH_TIME } from "../../utils/config";
 
-const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
+const Calendar = dynamic(() => import("../../components/Calendar"), {
+  ssr: false,
+});
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
