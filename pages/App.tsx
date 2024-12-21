@@ -43,10 +43,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    // let interval: NodeJS.Timeout;
 
     // Update the data every hour
-    interval = setInterval(() => {
+    const interval = setInterval(() => {
       refreshData();
     }, REFRESH_TIME);
 
