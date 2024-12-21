@@ -1,7 +1,6 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { NextAuthOptions } from "next-auth";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -33,7 +32,12 @@ const authOptions: NextAuthOptions = {
     },
   },
 };
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+function GoogleProvider(arg0: {
+  clientId: string;
+  clientSecret: string;
+  authorization: {
+    params: { scope: string; access_type: string; prompt: string };
+  };
+}): import("next-auth/providers/index").Provider {
+  throw new Error("Function not implemented.");
+}
