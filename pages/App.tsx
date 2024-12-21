@@ -12,30 +12,31 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { REFRESH_TIME } from "../utils/config";
 
-const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
+// const Calendar = dynamic(() => import("./Calendar"), { ssr: false });
+import Calendar from "./Calendar";
 
 export default function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [gapi, setGapi] = useState<any>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // const [isSignedIn, setIsSignedIn] = useState(false);
+  // const [gapi, setGapi] = useState<any>(null);
+  // const [token, setToken] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const handleLoginSuccess = (accessToken: string, gapiInstance: any) => {
-    setIsSignedIn(true);
-    setToken(accessToken);
-    setGapi(gapiInstance);
-  };
+  // const handleLoginSuccess = (accessToken: string, gapiInstance: any) => {
+  // setIsSignedIn(true);
+  // setToken(accessToken);
+  // setGapi(gapiInstance);
+  // };
 
-  const handleLogout = useCallback(() => {
-    if (token) {
-      (window as any).google.accounts.oauth2.revoke(token, () => {
-        setIsSignedIn(false);
-        setToken(null);
-        setGapi(null);
-        localStorage.removeItem("access_token");
-      });
-    }
-  }, [token]);
+  // const handleLogout = useCallback(() => {
+  //   if (token) {
+  //     (window as any).google.accounts.oauth2.revoke(token, () => {
+  //       setIsSignedIn(false);
+  //       setToken(null);
+  //       setGapi(null);
+  //       localStorage.removeItem("access_token");
+  //     });
+  //   }
+  // }, [token]);
 
   const refreshData = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -44,12 +45,10 @@ export default function App() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (isSignedIn) {
-      // Update the data every hour
-      interval = setInterval(() => {
-        refreshData();
-      }, REFRESH_TIME);
-    }
+    // Update the data every hour
+    interval = setInterval(() => {
+      refreshData();
+    }, REFRESH_TIME);
 
     // Clean up the interval on component unmount or when user signs out
     return () => {
@@ -57,7 +56,7 @@ export default function App() {
         clearInterval(interval);
       }
     };
-  }, [isSignedIn]);
+  });
 
   return (
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center bg-fixed">
@@ -76,21 +75,13 @@ export default function App() {
               >
                 <RefreshCw className="h-6 w-6" />
               </Button>
-              <AppDrawer onSignOut={handleLogout} isSignedIn={isSignedIn} />
+              <AppDrawer />
             </div>
           </div>
-          {isSignedIn ? (
-            <div className="grid md:grid-cols-2 gap-8">
-              <Tasks />
-              <Calendar gapi={gapi} refreshTrigger={refreshTrigger} />
-            </div>
-          ) : (
-            <div>
-              <Tasks />
-
-              <Login />
-            </div>
-          )}
+          <div className="grid md:grid-cols-2 gap-8">
+            <Tasks />
+            <Calendar />
+          </div>
         </div>
       </div>
     </div>

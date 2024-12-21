@@ -22,7 +22,7 @@ export default function Login() {
   return (
     <Card className="bg-white/10 border-none text-white">
       <CardHeader></CardHeader>
-      <CardContent>
+      {/* <CardContent>
         {session ? (
           <div>
             <p className="mb-4">Signed in as {session.user?.email}</p>
@@ -45,7 +45,7 @@ export default function Login() {
             </Button>
           </>
         )}
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 }
