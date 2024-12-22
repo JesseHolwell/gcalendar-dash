@@ -1,26 +1,29 @@
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { Menu, RefreshCw } from "lucide-react";
-import Image from "next/image";
+import { RefreshCw } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Refresh() {
+  const queryClient = useQueryClient();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await queryClient.refetchQueries();
+    setIsRefreshing(false);
+  };
+
   return (
     <Button
       variant="ghost"
-      // size="icon"
-      //   onClick={toggleDrawer}
-      // className="text-white"
+      size="icon"
+      onClick={handleRefresh}
+      disabled={isRefreshing}
+      aria-label="Refresh data"
     >
-      <RefreshCw className="h-6 w-6" />
+      <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
     </Button>
   );
 }

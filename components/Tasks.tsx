@@ -14,60 +14,38 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { fetchTasks, TaskViewModel, updateTask } from "@/services/taskService";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { takeCoverage } from "v8";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Tasks() {
   const { data: session } = useSession();
-  const [tasks, setTasks] = useState<TaskViewModel[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskViewModel | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    loadTasks();
-  }, [session]);
+  const { data: tasks, isLoading } = useQuery<TaskViewModel[]>({
+    queryKey: ["tasks", session],
+    queryFn: () => fetchTasks(session),
+    enabled: !!session,
+  });
 
-  const loadTasks = async () => {
-    setIsLoading(true);
-    try {
-      const fetchedTaskLists = await fetchTasks(session);
-
-      // Deconstruct task lists into a single list of TaskViewModel
-      const tasksWithCategories = fetchedTaskLists.flatMap((taskList) =>
-        taskList.tasks.map((task) => ({
-          id: task.id,
-          title: task.title,
-          category: taskList.title,
-          categoryId: taskList.id,
-          status: task.status,
-          notes: task.notes,
-          due: task.due,
-        }))
-      );
-
-      setTasks(tasksWithCategories);
-    } catch (error) {
-      console.error("Failed to load tasks:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const updateTaskMutation = useMutation({
+    mutationFn: (task: TaskViewModel) =>
+      updateTask(session, task.categoryId, task),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
   const handleToggleTask = async (
     event: React.MouseEvent,
     task: TaskViewModel
   ) => {
     event.stopPropagation();
-    try {
-      const updatedTask = await updateTask(session, task.categoryId, {
-        ...task,
-        status: task.status === "completed" ? "needsAction" : "completed",
-      });
-      setTasks(tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
-    } catch (error) {
-      console.error("Failed to update task:", error);
-    }
+    updateTaskMutation.mutate({
+      ...task,
+      status: task.status === "completed" ? "needsAction" : "completed",
+    });
   };
 
   const handleTaskClick = (task: TaskViewModel) => {
@@ -88,7 +66,7 @@ export default function Tasks() {
         ) : (
           <Table>
             <TableBody>
-              {tasks.map((task) => (
+              {tasks?.map((task) => (
                 <TableRow
                   key={task.id}
                   onClick={() => handleTaskClick(task)}
@@ -101,8 +79,13 @@ export default function Tasks() {
                       onClick={(event) => handleToggleTask(event, task)}
                       variant="default"
                       size="icon"
+                      disabled={updateTaskMutation.isPending}
                     >
-                      <CheckCircle className="h-6 w-6" />
+                      {updateTaskMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <CheckCircle className="h-6 w-6" />
+                      )}
                     </Button>
                   </TableCell>
                 </TableRow>

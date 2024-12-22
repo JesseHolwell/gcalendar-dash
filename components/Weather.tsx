@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
@@ -11,72 +11,55 @@ interface WeatherData {
   name: string;
 }
 
-interface WeatherProps {
-  refreshTrigger: number;
-}
-
-export default function Weather({ refreshTrigger }: WeatherProps) {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Fetch weather based on user location
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeather(latitude, longitude);
-      },
-      (err) => {
-        console.error("Geolocation error:", err);
-        setError("Unable to fetch your location.");
+export default function Weather() {
+  const fetchWeather = async (): Promise<WeatherData> => {
+    const position = await new Promise<GeolocationPosition>(
+      (resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
       }
     );
-  }, [refreshTrigger]);
 
-  const fetchWeather = async (lat: number, lon: number) => {
-    console.log("Getting weather");
+    const { latitude, longitude } = position.coords;
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${API_KEY}`
+    );
 
-    try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
-      );
-      const data = await response.json();
-      console.log("Received weather:", data);
-
-      if (response.ok) {
-        setWeather(data);
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      console.error("Weather fetch error:", err);
-      setError("Failed to fetch weather data.");
+    if (!response.ok) {
+      throw new Error("Failed to fetch weather data");
     }
+
+    return response.json();
   };
+
+  const {
+    data: weather,
+    error,
+    isLoading,
+  } = useQuery<WeatherData, Error>({
+    queryKey: ["weather"],
+    queryFn: fetchWeather,
+    refetchInterval: 600000, // Refetch every 10 minutesadf
+  });
 
   return (
     <Card className="bg-white/10 border-none text-white content-center">
       <CardHeader>
         {error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
+          <p className="text-red-500">{error.message}</p>
+        ) : isLoading ? (
+          <p>Loading weather...</p>
+        ) : weather ? (
           <span className="text-sm">
-            {weather ? (
-              <>
-                <p>
-                  {Math.round(weather.main.temp)}°C -{" "}
-                  {weather.weather[0].description}
-                </p>
-                <p>
-                  min: {Math.round(weather.main.temp_min)} max:{" "}
-                  {Math.round(weather.main.temp_max)}
-                </p>
-              </>
-            ) : (
-              <p>Loading weather...</p>
-            )}
+            <p>
+              {Math.round(weather.main.temp)}°C -{" "}
+              {weather.weather[0].description}
+            </p>
+            <p>
+              min: {Math.round(weather.main.temp_min)}°C max:{" "}
+              {Math.round(weather.main.temp_max)}°C
+            </p>
           </span>
-        )}
+        ) : null}
       </CardHeader>
     </Card>
   );

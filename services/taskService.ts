@@ -24,7 +24,9 @@ export interface TaskList {
   tasks: TaskModel[];
 }
 
-export async function fetchTasks(session: Session | null): Promise<TaskList[]> {
+export async function fetchTasks(
+  session: Session | null
+): Promise<TaskViewModel[]> {
   if (!session) {
     throw new Error("No active session");
   }
@@ -39,13 +41,27 @@ export async function fetchTasks(session: Session | null): Promise<TaskList[]> {
     throw new Error("Failed to fetch tasks");
   }
 
-  const taskLists: TaskList[] = await response.json();
+  let taskLists: TaskList[] = await response.json();
 
   // Filter out completed tasks for each task list
-  return taskLists.map((taskList) => ({
+  taskLists = taskLists.map((taskList) => ({
     ...taskList,
     tasks: taskList.tasks.filter((task) => task.status !== "completed"),
   }));
+
+  const tasksWithCategories = taskLists.flatMap((taskList) =>
+    taskList.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      category: taskList.title,
+      categoryId: taskList.id,
+      status: task.status,
+      notes: task.notes,
+      due: task.due,
+    }))
+  );
+
+  return tasksWithCategories;
 }
 
 export async function updateTask(

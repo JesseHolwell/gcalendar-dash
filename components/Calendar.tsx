@@ -14,31 +14,20 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { fetchEvents, Event } from "@/services/calendarService";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Calendar() {
   const { data: session } = useSession();
-  const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isWeeklyView, setIsWeeklyView] = useState(false);
 
-  useEffect(() => {
-    loadEvents();
-  }, [session, isWeeklyView]);
-
-  const loadEvents = async () => {
-    setIsLoading(true);
-    try {
-      const fetchedEvents = await fetchEvents(session, isWeeklyView);
-      setEvents(fetchedEvents);
-    } catch (error) {
-      console.error("Failed to load events:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: events, isLoading } = useQuery<Event[]>({
+    queryKey: ["events", session, isWeeklyView],
+    queryFn: () => fetchEvents(session, isWeeklyView),
+    enabled: !!session,
+  });
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
@@ -80,7 +69,7 @@ export default function Calendar() {
         ) : (
           <Table>
             <TableBody>
-              {events.map((event) => (
+              {events?.map((event) => (
                 <TableRow
                   key={event.id}
                   onClick={() => handleEventClick(event)}
