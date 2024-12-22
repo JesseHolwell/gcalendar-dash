@@ -37,7 +37,7 @@ export async function fetchEvents(
     )}&timeMax=${encodeURIComponent(timeMax)}`,
     {
       headers: {
-        Authorization: `Bearer ${session.accessToken}`,
+        "Content-Type": "application/json",
       },
     }
   );
@@ -61,7 +61,6 @@ export async function updateEvent(
   const response = await fetch(`/api/calendar`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${session.accessToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(event),
