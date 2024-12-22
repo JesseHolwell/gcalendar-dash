@@ -1,6 +1,6 @@
 import { Session } from "next-auth";
 
-export interface Task {
+export interface TaskViewModel {
   id: string;
   title: string;
   category: string;
@@ -10,13 +10,26 @@ export interface Task {
   due?: string;
 }
 
-export async function fetchTasks(session: Session | null): Promise<Task[]> {
+export interface TaskModel {
+  id: string;
+  title: string;
+  status: "needsAction" | "completed";
+  notes?: string;
+  due?: string;
+}
+
+export interface TaskList {
+  id: string;
+  title: string;
+  tasks: TaskModel[];
+}
+
+export async function fetchTasks(session: Session | null): Promise<TaskList[]> {
   if (!session) {
     throw new Error("No active session");
   }
 
   const response = await fetch("/api/tasks", {
-    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
@@ -26,57 +39,31 @@ export async function fetchTasks(session: Session | null): Promise<Task[]> {
     throw new Error("Failed to fetch tasks");
   }
 
-  const data = await response.json();
+  const taskLists: TaskList[] = await response.json();
 
-  //TODO make a model for this
-  return data.items.map((item: any) => ({
-    id: item.id,
-    title: item.title,
-    notes: item.notes,
-    status: item.status,
-    due: item.due,
-    category: item.category,
-    categoryId: item.categoryId,
+  // Filter out completed tasks for each task list
+  return taskLists.map((taskList) => ({
+    ...taskList,
+    tasks: taskList.tasks.filter((task) => task.status !== "completed"),
   }));
 }
 
-// export async function createTask(
-//   session: Session | null,
-//   task: Omit<Task, "id">
-// ): Promise<Task> {
-//   if (!session) {
-//     throw new Error("No active session");
-//   }
-
-//   const response = await fetch("/api/tasks", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(task),
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Failed to create task");
-//   }
-
-//   return response.json();
-// }
-
 export async function updateTask(
   session: Session | null,
-  task: Task
-): Promise<Task> {
+  taskListId: string,
+  task: TaskViewModel
+): Promise<TaskViewModel> {
   if (!session) {
     throw new Error("No active session");
   }
 
-  const response = await fetch(`/api/tasks/${task.id}`, {
-    method: "PUT",
+  //TODO this doesnt update
+  const response = await fetch("/api/tasks", {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(task),
+    body: JSON.stringify({ taskListId, task }),
   });
 
   if (!response.ok) {
@@ -85,20 +72,3 @@ export async function updateTask(
 
   return response.json();
 }
-
-// export async function deleteTask(
-//   session: Session | null,
-//   taskId: string
-// ): Promise<void> {
-//   if (!session) {
-//     throw new Error("No active session");
-//   }
-
-//   const response = await fetch(`/api/tasks/${taskId}`, {
-//     method: "DELETE",
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Failed to delete task");
-//   }
-// }

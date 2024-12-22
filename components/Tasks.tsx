@@ -11,15 +11,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { fetchTasks, Task, updateTask } from "@/services/taskService";
+import { fetchTasks, TaskViewModel, updateTask } from "@/services/taskService";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { takeCoverage } from "v8";
 
 export default function Tasks() {
   const { data: session } = useSession();
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [tasks, setTasks] = useState<TaskViewModel[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TaskViewModel | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,27 +31,22 @@ export default function Tasks() {
   const loadTasks = async () => {
     setIsLoading(true);
     try {
-      const fetchedTasks = await fetchTasks(session);
-      console.log("got tasks", fetchedTasks);
+      const fetchedTaskLists = await fetchTasks(session);
 
-      setTasks(fetchedTasks);
+      // Deconstruct task lists into a single list of TaskViewModel
+      const tasksWithCategories = fetchedTaskLists.flatMap((taskList) =>
+        taskList.tasks.map((task) => ({
+          id: task.id,
+          title: task.title,
+          category: taskList.title,
+          categoryId: taskList.id,
+          status: task.status,
+          notes: task.notes,
+          due: task.due,
+        }))
+      );
 
-      // let allTasks: Task[] = [];
-
-      // for (const taskList of fetchedTasks) {
-      //   const taskListId = taskList.id;
-      //   const taskListName = taskList.title;
-
-      //   const tasksWithListName = tasks.map((task: any) => ({
-      //     ...task,
-      //     category: taskListName,
-      //     categoryId: taskListId,
-      //   }));
-
-      //   allTasks = [...allTasks, ...tasksWithListName];
-
-      //   setTasks(allTasks);
-      // }
+      setTasks(tasksWithCategories);
     } catch (error) {
       console.error("Failed to load tasks:", error);
     } finally {
@@ -58,9 +54,13 @@ export default function Tasks() {
     }
   };
 
-  const handleToggleTask = async (task: Task) => {
+  const handleToggleTask = async (
+    event: React.MouseEvent,
+    task: TaskViewModel
+  ) => {
+    event.stopPropagation();
     try {
-      const updatedTask = await updateTask(session, {
+      const updatedTask = await updateTask(session, task.categoryId, {
         ...task,
         status: task.status === "completed" ? "needsAction" : "completed",
       });
@@ -70,7 +70,7 @@ export default function Tasks() {
     }
   };
 
-  const handleTaskClick = (task: Task) => {
+  const handleTaskClick = (task: TaskViewModel) => {
     setSelectedTask(task);
     setIsDialogOpen(true);
   };
@@ -98,7 +98,7 @@ export default function Tasks() {
                   <TableCell>{task.category}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={() => handleToggleTask(task)}
+                      onClick={(event) => handleToggleTask(event, task)}
                       variant="default"
                       size="icon"
                     >
