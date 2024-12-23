@@ -10,7 +10,7 @@ const Greeting: React.FC = () => {
   const username = session?.user?.name || SAMPLE_DATA.username;
 
   return (
-    <Card className="bg-white/10 border-none text-white content-center">
+    <Card className="/10 border-none text-white content-center">
       <CardHeader>
         <span>Hello {username}!</span>
       </CardHeader>

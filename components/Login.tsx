@@ -20,7 +20,7 @@ export default function Login() {
   }
 
   return (
-    // <Card className="bg-white/10 border-none text-white">
+    // <Card className="/10 border-none text-white">
     //   <CardHeader></CardHeader>
     //   <CardContent>
     <>

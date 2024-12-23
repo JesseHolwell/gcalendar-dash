@@ -56,7 +56,7 @@ export default function Calendar() {
   };
 
   return (
-    <Card className="bg-white/10 border-none text-white">
+    <Card className="/10 border-none text-white">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{isWeeklyView ? "Weekly" : "Today's"} Events</CardTitle>
         <Button onClick={toggleView} variant="default">

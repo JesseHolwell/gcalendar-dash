@@ -30,7 +30,7 @@ const Affirmation: React.FC = () => {
   }, []);
 
   return (
-    <Card className="bg-white/10 border-none text-white content-center">
+    <Card className="border-none text-white content-center">
       <CardHeader>
         <span>{affirmation}</span>
       </CardHeader>

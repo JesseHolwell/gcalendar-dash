@@ -30,7 +30,7 @@ export default function Clock() {
   }, []);
 
   return (
-    <Card className="bg-white/10 border-none text-white content-center">
+    <Card className="/10 border-none text-white content-center">
       <CardHeader>
         <span>{time}</span>
       </CardHeader>

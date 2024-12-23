@@ -54,7 +54,7 @@ export default function Tasks() {
   };
 
   return (
-    <Card className="bg-white/10 border-none text-white">
+    <Card className="/10 border-none text-white">
       <CardHeader>
         <CardTitle>Tasks</CardTitle>
       </CardHeader>

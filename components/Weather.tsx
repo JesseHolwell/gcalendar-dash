@@ -42,7 +42,7 @@ export default function Weather() {
   });
 
   return (
-    <Card className="bg-white/10 border-none text-white content-center">
+    <Card className="/10 border-none text-white content-center">
       <CardHeader>
         {error ? (
           <p className="text-red-500">{error.message}</p>
