@@ -16,7 +16,10 @@ export async function fetchEvents(
 ): Promise<CalendarEvent[]> {
   if (!session) {
     // throw new Error("No active session");
-    return SAMPLE_DATA.events;
+
+    return isWeeklyView
+      ? SAMPLE_DATA.dailyEvents.concat(SAMPLE_DATA.weeklyEvents)
+      : SAMPLE_DATA.dailyEvents;
   }
 
   const now = new Date();

@@ -13,24 +13,48 @@
 import { CalendarEvent } from "@/services/calendarService";
 import { TaskViewModel } from "@/services/taskService";
 
+function getRandomFutureDate(startDate?: Date): {
+  startDateTime: string;
+  endDateTime: string;
+} {
+  const now = new Date();
+  const randomDays = Math.floor(Math.random() * 6 + 1); // 1 to 6 days in the future
+  const randomHours = Math.floor(Math.random() * 24); // Random hour of the day
+
+  if (!startDate) {
+    startDate = new Date(now);
+    startDate.setDate(now.getDate() + randomDays);
+    startDate.setHours(randomHours, 0, 0, 0); // Random hour, zeroed minutes/seconds
+  }
+
+  const endDate = new Date(startDate);
+  endDate.setHours(startDate.getHours() + 1); // Add one hour for the end time
+
+  return {
+    startDateTime: startDate.toISOString(),
+    endDateTime: endDate.toISOString(),
+  };
+}
+
 export const SAMPLE_DATA: {
   username: string;
   tasks: TaskViewModel[];
-  events: CalendarEvent[];
+  weeklyEvents: CalendarEvent[];
+  dailyEvents: CalendarEvent[];
 } = {
   username: "Sample User",
   tasks: [
     {
       id: "cFVwU2lTN1RmSFRWTV9HNQ",
-      title: "Get a job",
-      category: "Work",
+      title: "Center align the greeting",
+      category: "Design",
       categoryId: "MTYzMjc3NTY2MDg1MDE1MzQ0MDY6MDow",
       status: "needsAction",
     },
     {
       id: "SlJlVTBpRHdaS18zcHJ6cA",
       title: "100 pushups",
-      category: "Health & Fitness",
+      category: "Health",
       categoryId: "Nzg0YWFkMmNxYmdJZHVVXw",
       status: "needsAction",
       notes: "Try to do them in sets of 20.",
@@ -45,43 +69,41 @@ export const SAMPLE_DATA: {
     },
     {
       id: "UGM0bnp6Tk1waHQ3Rm9Ecg",
-      title: "Task",
-      category: "Programming",
+      title: "Responsive layout",
+      category: "Design",
       categoryId: "cnVnblNZVVlSZ0FjdUhSOQ",
       status: "needsAction",
     },
     {
       id: "WDEzYTUyclhHT3d0QmxlQQ",
       title: "Yoga",
-      category: "Life",
+      category: "Health",
       categoryId: "d09FQ1F2VzNNblVHb1cyYg",
       status: "needsAction",
     },
   ],
-  events: [
-    {
-      id: "cgpjcd356pi32b9hcko3eb9k65gm2bb2cco64b9k6dhm8o9m68s3gp1o6o",
-      summary: "Event 1 Summary",
-      start: { dateTime: "2024-12-23T10:00:00Z" },
-      end: { dateTime: "2024-12-23T11:00:00Z" },
-    },
-    {
-      id: "c5j30d1pc5j62b9nckq3cb9k60pj2b9pchh32bb271gjgchm65ijie1ick",
-      summary: "Event 2 Summary",
-      start: { dateTime: "2024-12-24T14:00:00Z" },
-      end: { dateTime: "2024-12-24T15:00:00Z" },
-    },
-    {
-      id: "ckr3ccj4clhm6bb660s3gb9k6lh32b9p6cr6abb6c4p66opgc8qmcopg74",
-      summary: "Event 3 Summary",
-      start: { dateTime: "2024-12-25T08:00:00Z" },
-      end: { dateTime: "2024-12-25T09:00:00Z" },
-    },
-    {
-      id: "c9hm6c9gc5hj6bb36hi3eb9kc4r6cbb2c8p32b9h64r68p346ksm4eb2co",
-      summary: "Event 4 Summary",
-      start: { dateTime: "2024-12-26T18:00:00Z" },
-      end: { dateTime: "2024-12-26T19:00:00Z" },
-    },
-  ],
+
+  // TODO: yeah this is bad clean this up
+  weeklyEvents: Array.from({ length: 6 }, (_, index) => {
+    const { startDateTime, endDateTime } = getRandomFutureDate();
+    return {
+      id: `event-${index + 2}`,
+      summary: `Event ${index + 2} Summary`,
+      start: { dateTime: startDateTime },
+      end: { dateTime: endDateTime },
+    };
+  }).sort(
+    (a, b) =>
+      new Date(a.start.dateTime).getTime() -
+      new Date(b.start.dateTime).getTime()
+  ),
+  dailyEvents: Array.from({ length: 1 }, (_, index) => {
+    const { startDateTime, endDateTime } = getRandomFutureDate(new Date());
+    return {
+      id: `event-${index + 1}`,
+      summary: `Event ${index + 1} Summary`,
+      start: { dateTime: startDateTime },
+      end: { dateTime: endDateTime },
+    };
+  }),
 };

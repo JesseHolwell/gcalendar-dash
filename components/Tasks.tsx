@@ -79,7 +79,7 @@ export default function Tasks() {
                       onClick={(event) => handleToggleTask(event, task)}
                       variant="outline"
                       size="icon"
-                      disabled={updateTaskMutation.isPending}
+                      disabled={updateTaskMutation.isPending || !session}
                     >
                       {updateTaskMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
