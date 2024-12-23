@@ -21,7 +21,7 @@ export default function App() {
             <AppDrawer />
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-64">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-64">
           <Tasks />
           <Calendar />
         </div>
