@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { fetchEvents, Event } from "@/services/calendarService";
+import { fetchEvents, CalendarEvent } from "@/services/calendarService";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -19,17 +19,19 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function Calendar() {
   const { data: session } = useSession();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isWeeklyView, setIsWeeklyView] = useState(false);
 
-  const { data: events, isLoading } = useQuery<Event[]>({
+  const { data: events, isLoading } = useQuery<CalendarEvent[]>({
     queryKey: ["events", session, isWeeklyView],
     queryFn: () => fetchEvents(session, isWeeklyView),
-    enabled: !!session,
+    // enabled: !!session,
   });
 
-  const handleEventClick = (event: Event) => {
+  const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setIsDialogOpen(true);
   };
@@ -38,7 +40,7 @@ export default function Calendar() {
     setIsWeeklyView(!isWeeklyView);
   };
 
-  const formatTime = (event: Event) => {
+  const formatTime = (event: CalendarEvent) => {
     if (event.start.date) {
       return "All day";
     }

@@ -26,7 +26,7 @@ export default function Tasks() {
   const { data: tasks, isLoading } = useQuery<TaskViewModel[]>({
     queryKey: ["tasks", session],
     queryFn: () => fetchTasks(session),
-    enabled: !!session,
+    // enabled: !!session,
   });
 
   const updateTaskMutation = useMutation({

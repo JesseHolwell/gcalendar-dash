@@ -1,3 +1,4 @@
+import { SAMPLE_DATA } from "@/utils/sampleData";
 import { Session } from "next-auth";
 
 export interface TaskViewModel {
@@ -28,7 +29,7 @@ export async function fetchTasks(
   session: Session | null
 ): Promise<TaskViewModel[]> {
   if (!session) {
-    throw new Error("No active session");
+    return SAMPLE_DATA.tasks;
   }
 
   const response = await fetch("/api/tasks", {
@@ -60,6 +61,8 @@ export async function fetchTasks(
       due: task.due,
     }))
   );
+
+  console.log("tasks", tasksWithCategories);
 
   return tasksWithCategories;
 }

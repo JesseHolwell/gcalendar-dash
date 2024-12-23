@@ -1,6 +1,7 @@
+import { SAMPLE_DATA } from "@/utils/sampleData";
 import { Session } from "next-auth";
 
-export interface Event {
+export interface CalendarEvent {
   id: string;
   summary: string;
   description?: string;
@@ -12,9 +13,10 @@ export interface Event {
 export async function fetchEvents(
   session: Session | null,
   isWeeklyView: boolean
-): Promise<Event[]> {
+): Promise<CalendarEvent[]> {
   if (!session) {
-    throw new Error("No active session");
+    // throw new Error("No active session");
+    return SAMPLE_DATA.events;
   }
 
   const now = new Date();
@@ -47,13 +49,15 @@ export async function fetchEvents(
   }
 
   const data = await response.json();
+
+  console.log("calendar", data.items);
   return data.items;
 }
 
 export async function updateEvent(
   session: Session | null,
-  event: Event
-): Promise<Event> {
+  event: CalendarEvent
+): Promise<CalendarEvent> {
   if (!session) {
     throw new Error("No active session");
   }
