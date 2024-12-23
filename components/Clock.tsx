@@ -30,9 +30,9 @@ export default function Clock() {
   }, []);
 
   return (
-    <Card className="/10 border-none text-white content-center">
+    <Card className="border-none text-white content-center">
       <CardHeader>
-        <span>{time}</span>
+        <span className="text-4xl">{time}</span>
       </CardHeader>
     </Card>
   );

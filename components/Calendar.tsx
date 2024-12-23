@@ -23,7 +23,7 @@ export default function Calendar() {
     null
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isWeeklyView, setIsWeeklyView] = useState(false);
+  const [isWeeklyView, setIsWeeklyView] = useState(true);
 
   const { data: events, isLoading } = useQuery<CalendarEvent[]>({
     queryKey: ["events", session, isWeeklyView],
@@ -56,10 +56,10 @@ export default function Calendar() {
   };
 
   return (
-    <Card className="/10 border-none text-white">
+    <Card className="border-none text-white">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{isWeeklyView ? "Weekly" : "Today's"} Events</CardTitle>
-        <Button onClick={toggleView} variant="default">
+        <Button onClick={toggleView} variant="outline">
           {isWeeklyView ? "Show Today" : "Show Week"}
         </Button>
       </CardHeader>

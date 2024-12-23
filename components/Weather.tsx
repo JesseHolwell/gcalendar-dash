@@ -42,20 +42,18 @@ export default function Weather() {
   });
 
   return (
-    <Card className="/10 border-none text-white content-center">
+    <Card className="border-none text-white content-center">
       <CardHeader>
         {error ? (
           <p className="text-red-500">{error.message}</p>
         ) : isLoading ? (
           <p>Loading weather...</p>
         ) : weather ? (
-          <span className="text-sm">
-            <p>
-              {Math.round(weather.main.temp)}°C -{" "}
-              {weather.weather[0].description}
-            </p>
-            <p>
-              min: {Math.round(weather.main.temp_min)}°C max:{" "}
+          <span>
+            <p className="text-4xl">{Math.round(weather.main.temp)}°C</p>
+            <p className="text-md">{weather.weather[0].description}</p>
+            <p className="text-sm">
+              {Math.round(weather.main.temp_min)}°C{" - "}
               {Math.round(weather.main.temp_max)}°C
             </p>
           </span>

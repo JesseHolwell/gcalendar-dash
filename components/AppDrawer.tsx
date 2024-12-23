@@ -19,7 +19,7 @@ export default function AppDrawer() {
     <Drawer direction="bottom">
       <DrawerTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
           //   onClick={toggleDrawer}
           className="text-white"
@@ -112,7 +112,9 @@ export default function AppDrawer() {
                 <Login />
 
                 <DrawerClose asChild>
-                  <Button className="mt-2">Close</Button>
+                  <Button className="mt-2" variant="outline">
+                    Close
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </div>

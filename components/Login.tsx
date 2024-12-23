@@ -20,14 +20,14 @@ export default function Login() {
   }
 
   return (
-    // <Card className="/10 border-none text-white">
+    // <Card className="border-none text-white">
     //   <CardHeader></CardHeader>
     //   <CardContent>
     <>
       {session ? (
         <div>
           <p className="mb-4">Signed in as {session.user?.email}</p>
-          <Button onClick={handleSignOut} variant="default">
+          <Button onClick={handleSignOut} variant="destructive">
             Sign Out
           </Button>
         </div>

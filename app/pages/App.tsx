@@ -12,9 +12,11 @@ export default function App() {
     <div className="min-h-screen bg-[url('/images/forest-background.jpg')] bg-cover bg-center bg-fixed h-screen">
       <div className="min-h-screen bg-black/75 p-4 text-white h-screen flex flex-col mx-auto space-y-8 justify-between">
         <div className="flex md:flex-row flex-col justify-between items-center w-full gap-8 items-stretch">
-          <Clock />
+          <div className="w-25">
+            <Clock />
+          </div>
           <Greeting />
-          <div className="flex w-full md:w-auto justify-end -order-1 md:order-1 items-center">
+          <div className="w-25 flex justify-end -order-1 md:order-1 items-center gap-2">
             <Refresh />
             <AppDrawer />
           </div>

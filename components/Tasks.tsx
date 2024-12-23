@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { fetchTasks, TaskViewModel, updateTask } from "@/services/taskService";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -54,7 +54,7 @@ export default function Tasks() {
   };
 
   return (
-    <Card className="/10 border-none text-white">
+    <Card className="border-none text-white">
       <CardHeader>
         <CardTitle>Tasks</CardTitle>
       </CardHeader>
@@ -77,14 +77,14 @@ export default function Tasks() {
                   <TableCell>
                     <Button
                       onClick={(event) => handleToggleTask(event, task)}
-                      variant="default"
+                      variant="outline"
                       size="icon"
                       disabled={updateTaskMutation.isPending}
                     >
                       {updateTaskMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        <CheckCircle className="h-6 w-6" />
+                        <Check className="h-6 w-6" />
                       )}
                     </Button>
                   </TableCell>

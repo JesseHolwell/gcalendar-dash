@@ -17,7 +17,7 @@ export default function Refresh() {
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="icon"
       onClick={handleRefresh}
       disabled={isRefreshing}
