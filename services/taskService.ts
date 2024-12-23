@@ -76,17 +76,25 @@ export async function updateTask(
     throw new Error("No active session");
   }
 
-  //TODO this doesnt update
+  if (!task.id) {
+    throw new Error("Task ID is required to update a task");
+  }
+
   const response = await fetch("/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ taskListId, task }),
+    body: JSON.stringify({
+      taskListId,
+      taskId: task.id, // Pass the task ID to the API
+      task,
+    }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to update task");
+    const errorDetails = await response.text();
+    throw new Error(`Failed to update task: ${errorDetails}`);
   }
 
   return response.json();

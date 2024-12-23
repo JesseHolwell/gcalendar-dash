@@ -92,19 +92,19 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { taskListId, task } = body;
+    const { taskListId, taskId, task } = body;
 
-    if (!taskListId || !task) {
+    if (!taskListId || !taskId || !task) {
       return NextResponse.json(
-        { error: "Missing taskListId or task data" },
+        { error: "Missing taskListId, taskId, or task data" },
         { status: 400 }
       );
     }
 
     const response = await fetch(
-      `https://tasks.googleapis.com/tasks/v1/lists/${taskListId}/tasks`,
+      `https://tasks.googleapis.com/tasks/v1/lists/${taskListId}/tasks/${taskId}`,
       {
-        method: "POST",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token.accessToken}`,
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error creating task:", error);
+    console.error("Error updating task:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
